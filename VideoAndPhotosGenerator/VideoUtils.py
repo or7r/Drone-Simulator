@@ -43,9 +43,9 @@ def upload_video(video_url, upload_url):
 
 
 # Example usage
-query = input("Enter your search topic: ")
-video_url = get_video_url(query)
-
-upload_url = "https://your-api.com/upload"   # Replace with actual API endpoint
-
-upload_video(video_url, upload_url)
+# query = input("Enter your search topic: ")
+# video_url = get_video_url(query)
+#
+# upload_url = "https://your-api.com/upload"   # Replace with actual API endpoint
+#
+# upload_video(video_url, upload_url)
