@@ -1,5 +1,6 @@
 from enum import Enum
 
 class FroceSide(Enum):
-    BLUE = 1
-    RED = 2
+    RED = 1
+    BLUE = 2
+    GRAY = 3
