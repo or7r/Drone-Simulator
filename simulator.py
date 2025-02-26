@@ -1,7 +1,12 @@
 from Objects.Drone import Drone
-from Objects.Path import Path
 from Objects.Enums.ForceSide import FroceSide
+from Objects.Path import Path
 from blue_forces_coverage import create_blue_forces_coverage_gaza
+import pandas as pd
+
+import sys
+
+
 def main():
     path_Gaza_Short_Routes = [[(31.3443293, 34.3095897), (31.2456487, 34.8577683)],
                                [(31.557994, 34.9762809), (31.8952532, 34.8105616)]]
@@ -32,13 +37,32 @@ def main():
                                  [(32.723612, 35.312492), (32.8285812, 35.0844915)]]
     drones = []
     radars = create_blue_forces_coverage_gaza()
-    for i in range(len(path_Gaza_Short_Routes)):
-        drones.append(Drone(1, 30, FroceSide.RED, Path(path_Gaza_Short_Routes[i][0], path_Gaza_Short_Routes[i][1])))
+    for i in range(len(path_Inside_Israel_Routes)):
+        drones.append(Drone(1, 30, FroceSide.BLUE, Path(path_Inside_Israel_Routes[i][0], path_Inside_Israel_Routes[i][1])))
+    
+    all_data = []
+
     for d in drones:
+        # sleep(1)
         d.update_state()
-        is_visible = any([r.is_coordinate_visible(d.get_current_location()) for r in radars])
-        if is_visible:
-            print(str(d))             
+
+
+        while any([d.is_flying_func() for d in drones]):
+            is_visible = True #any([r.is_coordinate_visible(d.get_current_location()) for r in radars])
+            if is_visible:
+
+                drone_update = [d.get_id(), d.force_side.name, d.current_flight.get_time(),
+                                float(d.current_location[0]), float(d.current_location[1]), d.get_current_speed(),
+                                d.current_flight.get_id()]
+                all_data.append(drone_update)
+                print(str(d))
+
+            if len(all_data) >= 1000:
+                df = pd.DataFrame(all_data, columns=["drone_id", "force_side_name", "time",
+                                                        "lat", "lon", "speed", "flight_id"])
+                df.to_csv("data.csv")
+
+    print("finished")           
         
 if __name__ == "__main__":
     main()
