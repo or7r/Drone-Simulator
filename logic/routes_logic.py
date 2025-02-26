@@ -151,8 +151,6 @@ def test_get_linear_route():
     acceleration = 2  # m/s²
 
     route, v_end = get_linear_route(start, end, v0, acceleration)
-    print(route)
-    print(v_end)
     plot_route(route, filename)
 
 def test_get_pice_wise_linear_route():
@@ -175,8 +173,6 @@ def test_get_circular_route():
     acceleration = 2  # m/s²
     v_max = 20  # m/s²
     route, v_end = get_circular_route(start, end, v0, acceleration, v_max)
-    print(route)
-    print(v_end)
     plot_route(route,filename)
 
 if __name__ == '__main__':
