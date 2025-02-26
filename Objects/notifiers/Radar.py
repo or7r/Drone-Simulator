@@ -3,7 +3,7 @@ import math
 import folium
 from haversine import haversine, Unit
 
-from GroundUnit import GroundUnit
+from .GroundUnit import GroundUnit
 
 
 class Radar(GroundUnit):
