@@ -17,6 +17,7 @@ class Radar(GroundUnit):
             view_angle: The field of view of the radar in degrees.
 
         """
+        super().__init__()
         self.coordinate = coordinate
         self.seeing_distance = seeing_distance
         self.view_direction = view_direction
