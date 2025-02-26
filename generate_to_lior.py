@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 from enum import Enum
 from uuid import uuid1, getnode
 
@@ -62,10 +63,6 @@ lat, lon = random_coordinate_in_geojson_gpd()
 pikud = random.randint(1,3)
 classification = random.randint(1,3)
 
-<<<<<<< HEAD:generate_to_lior.py
 x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words(), 'creation_time': time.time(), 'pikud': pikud}
-=======
-x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words()}
->>>>>>> 3c794f6 (not ready yet):random_files.py
 
 sys.stdout.write(str(x))
