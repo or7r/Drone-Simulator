@@ -1,7 +1,8 @@
 import random
 import sys
-import uuid
+import time
 from enum import Enum
+from uuid import uuid1, getnode
 
 import geopandas as gpd
 from faker import Faker
@@ -53,12 +54,15 @@ def generate_random_string_with_words(num_words: int = 5) -> str:
   words = [fake.word() for _ in range(num_words)]
   return ' '.join(words)
 
-uuid = int(uuid.uuid4().hex, 16)
+_my_clock_seq = random.getrandbits(14)
+_my_node = getnode()
+
+uuid = str(uuid1(node=_my_node, clock_seq=_my_clock_seq)).replace("-", "")[:16]
 
 lat, lon = random_coordinate_in_geojson_gpd()
 
 classification = random.randint(1,3)
 
-x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words()}
+x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words(), 'creation_time': time.time()}
 
-sys.stdout.write(str(x))
+sys.stdout.write(str(x).replace("'", '"'))
