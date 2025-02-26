@@ -1,4 +1,6 @@
-class CombatEntity:
+from abc import ABC
+
+class CombatEntity(ABC):
     entity_counter = 0
 
     def __init__(self, force_side):
