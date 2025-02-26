@@ -60,9 +60,9 @@ _my_node = getnode()
 uuid = str(uuid1(node=_my_node, clock_seq=_my_clock_seq)).replace("-", "")[:16]
 
 lat, lon = random_coordinate_in_geojson_gpd()
-
+pikud = random.randint(1,3)
 classification = random.randint(1,3)
 
-x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words(), 'creation_time': time.time()}
+x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words(), 'creation_time': time.time(), 'pikud': pikud}
 
 sys.stdout.write(str(x).replace("'", '"'))
