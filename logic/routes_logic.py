@@ -74,6 +74,7 @@ def get_pice_wise_linear_route(coordinates, v0, v_max, accelerations, dt=10.0):
 
         v = v_end
 
+
         if full_route:
             full_route.extend(route_segment[1:])  # Avoid duplicating points
         else:
@@ -104,7 +105,7 @@ def get_circular_route(start_coordinate, end_coordinate, v0, a, vmax, dt=1.0):
     # Calculate the number of points based on total time and time step
     num_points = int(total_time / dt)
 
-    route = []
+    route = [start_coordinate]
     v = v0
     for i in range(num_points):
         # Determine the angle for the current point
@@ -151,6 +152,7 @@ def test_get_linear_route():
     acceleration = 2  # m/s²
 
     route, v_end = get_linear_route(start, end, v0, acceleration)
+    print(route)
     plot_route(route, filename)
 
 def test_get_pice_wise_linear_route():
@@ -163,6 +165,7 @@ def test_get_pice_wise_linear_route():
     v_max = 150
     accelerations = [2, 1, 2, 1, 2]  # m/s² for each segment
     full_route = get_pice_wise_linear_route(coordinates, v0, v_max, accelerations)
+    print(full_route)
     plot_route(full_route,filename)
 
 def test_get_circular_route():
@@ -173,6 +176,7 @@ def test_get_circular_route():
     acceleration = 2  # m/s²
     v_max = 20  # m/s²
     route, v_end = get_circular_route(start, end, v0, acceleration, v_max)
+    print(route)
     plot_route(route,filename)
 
 if __name__ == '__main__':
