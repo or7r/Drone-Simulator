@@ -116,11 +116,21 @@ class Radar(GroundUnit):
         start_angle = int((self.view_direction - half_view_angle) % 360)
         end_angle = int((self.view_direction + half_view_angle) % 360)
 
+        # If the start angle is greater than the end angle, we need to handle the wraparound
+        if start_angle > end_angle:
+            # Two parts: one from start_angle to 360 and one from 0 to end_angle
+            angles_1 = range(start_angle, 360)
+            angles_2 = range(0, end_angle + 1)
+            angles = list(angles_1) + list(angles_2)
+        else:
+            # Single part: from start_angle to end_angle
+            angles = range(start_angle, end_angle + 1)
+
         # Create points around the boundary of the sector
         points = [self.coordinate]
 
         # Generate the boundary points of the sector
-        for angle in range(start_angle, end_angle + 1, 1):
+        for angle in angles:
             target_point = self.point_in_radius(angle, self.seeing_distance)
             points.append(target_point)
 
