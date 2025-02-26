@@ -6,7 +6,7 @@ from ..CombatEntity import CombatEntity
 
 class GroundUnit(CombatEntity, ABC):
     def __init__(self):
-        super().__init__(self, force_side=FroceSide.BLUE)
+        super().__init__(force_side=FroceSide.BLUE)
 
     @abstractmethod
     def is_coordinate_visible(self, coordinate) -> bool:

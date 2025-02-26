@@ -1,14 +1,18 @@
 import random
 import sys
-import uuid
 from enum import Enum
+from uuid import uuid1, getnode
 
-import arrow
 import geopandas as gpd
 from faker import Faker
 from shapely.geometry import Point
 
 GEOJSON = "C:/Users/adari/Documents/Drone-Simulator/israel.json"
+
+class DroneClassification(Enum):
+  Recognized = 1,
+  Unrecognized = 2,
+  Enemy = 3,
 
 def random_coordinate_in_geojson_gpd() -> tuple:
   """
@@ -35,30 +39,29 @@ def random_coordinate_in_geojson_gpd() -> tuple:
   except Exception as e:
     print(f"An error occurred: {e}")
 
-class DroneClassification(Enum):
-  Recognized = 1,
-  Unrecognized = 2,
-  Enemy = 3,
+def generate_random_string_with_words(num_words: int = 5) -> str:
+  """
+  Generate a random string with words.
 
+  Parameters:
+  - num_words: The number of words to include in the string. Default is 5.
 
-def generate_drone():
-  id = int(uuid.uuid4().hex, 16)
-  name = Faker().word()
-  battery = random.randint(0,100)
-  speed = random.uniform(0, 100)
-  video = "OK" if random.choice([True, False]) else "BAD"
+  Returns:
+  - A string containing random words.
+  """
+  fake = Faker()
+  words = [fake.word() for _ in range(num_words)]
+  return ' '.join(words)
 
-  return {"id": id, "name": name, "battery": battery, "speed": speed, "video": video}
+_my_clock_seq = random.getrandbits(14)
+_my_node = getnode()
 
-def generate_location():
-  id = int(uuid.uuid4().hex, 16)
-  drone_id = int(uuid.uuid4().hex, 16)
-  lat, lon = random_coordinate_in_geojson_gpd()
-  timestamp = arrow.now()
-  image = "OK" if random.choice([True, False]) else "BAD"
-  flight = random.randint(0,100)
+uuid = str(uuid1(node=_my_node, clock_seq=_my_clock_seq))
 
-  return {"id": id, "drone_id": drone_id, "lat": lat, "lon": lon, "timestamp": timestamp, "image": image, "flight": flight}
+lat, lon = random_coordinate_in_geojson_gpd()
 
+classification = random.randint(1,3)
 
-sys.stdout.write(str(generate_location()))
+x = {'id': uuid, 'classification': classification, 'lat': lat, 'lon': lon, 'description': generate_random_string_with_words()}
+
+sys.stdout.write(str(x))

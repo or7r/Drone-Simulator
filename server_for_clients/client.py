@@ -1,7 +1,7 @@
 import socket
 
 # Client settings
-HOST = 'localhost'
+HOST = '172.20.10.2'
 PORT = 11111
 
 # Create a TCP/IP socket
