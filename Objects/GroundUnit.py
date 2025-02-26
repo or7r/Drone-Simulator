@@ -1,4 +1,5 @@
-from Entity import CombatEntity 
+from .CombatEntity import CombatEntity 
+
 class GroundUnit(CombatEntity):
     pass
 
