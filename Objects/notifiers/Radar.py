@@ -1,5 +1,6 @@
 import math
 
+import folium
 from haversine import haversine, Unit
 
 from GroundUnit import GroundUnit
@@ -56,16 +57,20 @@ class Radar(GroundUnit):
             bool: True if the target is within the radar's coverage, False otherwise.
 
         """
+        # Check the distance to the target
         distance = haversine(self.coordinate, target_coord, unit=Unit.METERS)
         if distance > self.seeing_distance:
             return False
 
+        # Check if the target is within the radar's angular field of view
         bearing = self.calculate_bearing(self.coordinate, target_coord)
         half_view_angle = self.view_angle / 2
 
+        # Calculate the angular range the radar covers
         min_angle = (self.view_direction - half_view_angle) % 360
         max_angle = (self.view_direction + half_view_angle) % 360
 
+        # Check if the bearing of the target is within the angular range
         if min_angle < max_angle:
             in_angle = min_angle <= bearing <= max_angle
         else:
@@ -73,3 +78,65 @@ class Radar(GroundUnit):
 
         return in_angle
 
+    def point_in_radius(self, angle, distance):
+        """
+        Calculate the target point at a certain distance and angle from the radar position.
+        """
+        lat1, lon1 = map(math.radians, self.coordinate)
+
+        # Earth's radius in meters
+        R = 6371000  # meters
+
+        # Convert distance from meters to radians
+        lat_dist = distance / R
+        lon_dist = distance / (R * math.cos(lat1))
+
+        # Calculate the new point using the bearing (angle)
+        target_lat = lat1 + lat_dist * math.cos(math.radians(angle))
+        target_lon = lon1 + lon_dist * math.sin(math.radians(angle))
+
+        return math.degrees(target_lat), math.degrees(target_lon)
+
+    def plot_coverage(self, map_obj):
+        """
+        Plot the radar's coverage area as a slice of a circle (sector) on the given folium map.
+        """
+        # Plot radar position as a marker
+        folium.Marker(
+            location=self.coordinate,
+            popup="Radar Coverage",
+            icon=folium.Icon(color='blue', icon='info-sign')
+        ).add_to(map_obj)
+
+        # Calculate the boundary points of the sector
+        half_view_angle = self.view_angle / 2
+
+        # Calculate the two extreme angles
+        start_angle = int((self.view_direction - half_view_angle) % 360)
+        end_angle = int((self.view_direction + half_view_angle) % 360)
+
+        # Create points around the boundary of the sector
+        points = [self.coordinate]
+
+        # Generate the boundary points of the sector
+        for angle in range(start_angle, end_angle + 1, 1):
+            target_point = self.point_in_radius(angle, self.seeing_distance)
+            points.append(target_point)
+
+        # Close the polygon by adding the first point again
+        points.append(self.coordinate)
+
+        # Plot the sector as a polygon (slice of a circle)
+        folium.Polygon(
+            locations=points,
+            color='blue',
+            fill=True,
+            fill_opacity=0.2
+        ).add_to(map_obj)
+
+        # Optionally, add the view direction line (to help visualize the center)
+        end_lat, end_lon = self.point_in_radius(self.view_direction, self.seeing_distance)
+        folium.Marker(
+            location=(end_lat, end_lon),
+            icon=folium.Icon(color='red', icon='arrow-right')
+        ).add_to(map_obj)
