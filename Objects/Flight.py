@@ -1,8 +1,10 @@
 import uuid
 
 class Flight:
+    lol = 0
     def __init__(self, path, drone_id):
-        self._id = uuid.uuid4().int
+        self._id = Flight.lol
+        Flight.lol += 1
         self._path = path
         self._drone_id = drone_id
         self.time = 0

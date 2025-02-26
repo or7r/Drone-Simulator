@@ -3,7 +3,7 @@ import random
 
 class Path:
     def __init__(self, start, end):
-        self.routes = get_linear_route(start, end, 10, 2)
+        self.routes, v = get_linear_route(start, end, 10, 2)
         self.num_of_route = 0
     
     def get_start(self):
@@ -18,3 +18,7 @@ class Path:
 
     def get_current_location(self, time):
         return self.routes[time] 
+    
+    def is_end(self):
+        # print(len(self.routes))
+        return self.num_of_route == (len(self.routes) - 1)

@@ -21,16 +21,19 @@ class Drone(CombatEntity):
 
     def get_current_speed(self):
         return self.path.get_current_speed()
+    
+    def get_time(self):
+        return self.current_flight.get_time()
 
     def __str__(self) -> str:
-        return f"{self.drone_type.name} location: {str(self.current_location)} speed: {self.get_current_speed()}"
+        return f"id: {self.get_id()} team: {self.force_side.name} time: {self.current_flight.get_time()} location: {str(self.current_location)} speed: {self.get_current_speed()} flight id: {self.current_flight.get_id()}"
 
     def update_state(self, wanted_time = None):
         self.current_flight = Flight(self.path, self.id)
         self.current_location = self.path.get_start()
         if wanted_time is None:
             self.is_flying = True
-            thread = threading.Thread(target=self.exec_flight, args=(self, ))
+            thread = threading.Thread(target=self.exec_flight)
             thread.start()
         else:
             self.current_location = self.path.get_current_location(wanted_time)
@@ -39,11 +42,17 @@ class Drone(CombatEntity):
     def kill_flight(self):
         self.is_flying = False
 
+    def is_flying_func(self):
+        return self.is_flying
+    
     def exec_flight(self):
         while self.is_flying:
             sleep(1)
             self.current_flight.update_time()
-            self.current_location = path.get_next_location()
+            self.current_location = self.path.get_next_point()
+            if self.path.is_end():
+                self.is_flying = False
+            
         
 
         
