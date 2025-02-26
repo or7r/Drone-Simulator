@@ -1,4 +1,5 @@
-from Entity import CombatEntity 
+from .CombatEntity import CombatEntity
+from .Enums.ForceSide import FroceSide
 import Flight
 
 class Drone(CombatEntity):
@@ -14,6 +15,9 @@ class Drone(CombatEntity):
 
     def get_current_speed():
         pass
+
+    def __str__(self) -> str:
+        return f"{self.drone_type.name} location: {str(self.current_location)} speed: {self.current_speed}"
 
     def update_state():
         pass
