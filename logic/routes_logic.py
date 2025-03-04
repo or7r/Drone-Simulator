@@ -177,7 +177,6 @@ def test_get_circular_route():
     v_max = 20  # m/s²
     route, v_end = get_circular_route(start, end, v0, acceleration, v_max)
     print(route)
-    print("dhobsld")
     plot_route(route,filename)
 
 if __name__ == '__main__':
